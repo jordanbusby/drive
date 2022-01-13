@@ -1,0 +1,48 @@
+$menu-shadow:
+            0 8px 10px 1px rgba(0,0,0,0.14),
+            0 3px 14px 2px rgba(0,0,0,0.12),
+            0 5px 5px -3px rgba(0,0,0,0.2);
+
+@mixin menu-base {
+    position: absolute;
+    display: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: $menu-shadow;
+    font-size: 14px;
+    padding: 15px 0;
+    &.active {
+        display: flex;
+        flex-flow: column;
+        justify-content: flex-start;
+    }
+    > div {
+        padding: 10px 20px;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 10px 15px;
+        user-select: none;
+        
+        &:hover {
+            background-color: rgb(209, 209, 209);
+        }
+
+        img {
+            margin: 0 10px 0 0;
+        }
+    }
+}
+
+.folder_menu {
+    @include menu-base;
+}
+
+#filemenu {
+    @include menu-base;
+}
+
+#pathmenu {
+    @include menu-base;
+}

@@ -1,0 +1,8 @@
+export { default as login } from './login'
+export { default as register } from './register'
+export { default as home } from './home'
+export { default as api } from './api'
+export { default as upload } from './upload'
+export { default as download } from './download'
+export { default as preview } from './preview'
+export { default as getpdf } from './getpdf'

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "listEmittedFiles": true,
+        "listFiles": false,
+        "experimentalDecorators": true,
+        "strict": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "alwaysStrict": true,
+        "allowJs": false,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true,
+        "target": "ES2020"
+    },
+    "compileOnSave": true,
+    "include": [ "src" ]
+}

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta name="viewport" content="width=device-width">
+        <title>ASE Drive</title>
+        <!-- external files -->
+        <link rel="stylesheet" href="/css/home.css">
+        <!-- 'Cabin' font -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet"> 
+        <!-- Roboto font --> 
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+        <!-- Viewport stuff -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/11e63c8632.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+
+
+     <!-- TOP -->
+     <div id="header" class="top">
+      <img class="header-ase-logo" src ="/images/asBigTransparent.png">
+      <div class="header-menu-wrapper">
+        <div class="user-circle-menu"></div>
+        <div class="dropdown-caret"></div>
+        <div class="header-dropdown-menu-wrapper" tabindex="0">
+          <div class="menulink-files">My Files</div>
+          <div class="menulink-account">My Account</div>
+          <div class="menulink-users">Users</div>
+          <div class="menulink-company">Companies</div>
+          <div class="menulink-signout">Sign Out</div>
+        </div>
+      </div>
+      </div>
+
+
+     <!-- FILE NAVIGATION -->
+      <div id="navigation-container" class="file-nav">
+
+        <!-- PATH HORIZONTAL EXPANDING MENU -->
+        <div id="path" class="file-nav"></div>
+
+
+        <!-- CONTROL BUTTONS IN NAV -->
+          <div id="controls" class="file-nav">
+            <img id="control-delete" class="control" src="/images/trash.png">
+            <img id="control-add" class="control" src="/images/add.png">
+            <img id="control-info" class="control" src="/images/control-info.png">
+          </div>
+        </div>
+        
+
+        <!-- MAIN -->
+            
+
+              <!-- FILES CONTAINER -->
+               <div id="files-container">
+                  <div class="files-list-header">
+                    <div id="name">Name</div>
+                    <div id="date">Last Modified</div>
+                    <div id="size">Size</div>
+                  </div>
+                </div>
+
+                <!-- My Account -->
+                <div class="my_account--wrapper">
+                    <div class="my_account--header">
+                      <p>My Account</p>
+                    </div>
+                    <div class="my_account--body">
+                      <div class="my_account_body--name account_section">
+                        <p>Name</p>
+                        <input class="my_account_input--name" type="text" placeholder="">
+                        <p class="my_account_popup--name popup"></p>
+                      </div>
+                      <div class="my_account_body--email account_section">
+                        <p>Email</p>
+                        <input type="text" class="my_account_input--email" placeholder="">
+                        <p class="my_account_popup--email popup"></p>
+                      </div>
+                      <div class="my_account_body--password account_section">
+                        <p>Password</p>
+                        <input type="password" class="my_account_input--password" placeholder="">
+                        <p class="my_account_popup--password popup"></p>
+                      </div>
+                      <div class="my_account_body--confirm account_section">
+                        <p>Confirm Password</p>
+                        <input type="password" class="my_account_input--confirm" placeholder="">
+                        <p class="my_account_popup--confirm popup"></p>
+                      </div>
+                      <div class="my_account_body--submit">Update Account</div>
+                      <div class="my_account_body--result"></div>
+                    </div>
+                </div>
+
+                <!-- Users -->
+                <div class="users--wrapper">
+                  <div class="users--heading">
+                    <h1 class="users_h1--title">Users</h1>
+                  </div>
+                  <div class="userlist-buttons">
+                    <button class="delete">Delete Selected</button>
+                  </div>
+                  <table class="userlist">
+                    <thead>
+                      <tr class="mainrow">
+                        <td class="head--checkbox_td"><input class="head--checkbox_input" type="checkbox"></td>
+                        <td class="head--name_td"><span class="head--name_span">Name </span><span class="head--company_span">/ Company</span></td>
+                        <td class="head--email_td"><span class="head--email_span">Email</span></td>
+                        <td class="head--lastseen_td"><span class="head--lastseen_span">Last Seen</span></td>
+                        <td class="head--active_td"><span class="head--active_span">Online</span></td>
+                      </tr>
+                    </thead>
+                    <tbody class="userlist">
+                      <tr class="addnew--row">
+                        <td class="addnew_blank_td"></td>
+                        <td colspan="4" class="addnew_td"><span class="addnew_span">Add user..</span></td>
+                        </tr>
+                        <tr class="addnew--poprow">
+                          <td class="poprow--first_cell"><div class="poprow--first_cell_text">Name</div></td>
+                          <td><div class="poprow--name-row-div"><input type="text" class="poprow--name_input newuser_input"></div></td>
+                          <td colspan="3"><div class="poprow--name_result vresult"></div></td>
+                        </tr>
+                          <tr class="addnew--poprow">
+                            <td class="poprow--first_cell"><div>Email</div></td>
+                            <td><div><input type="text" class="poprow--email_input newuser_input"></div></td>
+                            <td colspan="3"><div class="poprow--email_result vresult"></div></td>
+                          </tr>
+                          <tr class="addnew--poprow">
+                            <td class="poprow--first_cell"><div>Password</div></td>
+                            <td><div><input type="text" class="poprow--password_input newuser_input"></div></td>
+                            <td colspan="3"><div class="poprow--password_result vresult"></div></td>
+                          </tr>
+                          <tr class="addnew--poprow">
+                            <td class="poprow--first_cell"><div>Confirm Password</div></td>
+                            <td><div><input type="text" class="poprow--confirm_input newuser_input"></div></td>
+                            <td colspan="3"><div class="poprow--confirm_result vresult"></div></td>
+                          </tr>
+                          <tr class="addnew--poprow">
+                            <td class="poprow--first_cell"><div>Company</div></td>
+                            <td>
+                              <div>
+                                <select class="poprow--company_select"></select>
+                              </div>
+                            </td>
+                            <td>
+                              <div>
+                                <select class="poprow--type_select">
+                                  <option value="user">User</option>
+                                  <option value="admin">Administrator</option>
+                                  <option value="super">Superuser</option>
+                                </select>
+                              </div>
+                            </td>
+                            <td colspan="2">
+                              <div>
+                                <button type="button" class="poprow--newuser_button">Add user</button>
+                              </div>
+                            </td>
+                          </tr>
+                    </tbody>
+                  </table>
+                  <div class="users-result"></div>
+                </div>
+
+ 
+             <!-- PATH MENU -->
+             <div id="pathmenu">
+               <div id="pathmenu-newfolder" class="pathmenu-link newfolder-link">
+                 <img src="/images/add.png" height="20" width="20">
+                 <span>New Folder</span>
+               </div>
+               <div id="pathmenu-uploadfile" class="pathmenu-link">
+                 <img src="/images/upload-file.png" height="20" width="20">
+                 <span>Upload File</span>
+               </div>
+               <div id="pathmenu-uploadfolder" class="pathmenu-link uploadfolder-link">
+                 <img src="/images/upload-folder.png" height="20" width="20">
+                 <span>Upload Folder</span>
+             </div>
+            </div>
+
+
+            <!-- FOLDER MENU -->
+             <div class="folder_menu">
+               <div id="foldermenu-newfolder" class="foldermenu-link newfolder-link">
+                 <img src="/images/add.png" height="15" width="15">
+                 <span>New Folder</span>
+               </div>
+              <div id="foldermenu-download" class="foldermenu-link">
+                <img src="/images/down-arrow.png" height="15" width="15">
+                <span>Download Folder</span>
+              </div>
+              <div id="foldermenu-delete" class="foldermenu-link">
+                <img src="/images/delete.png" height="15" width="15">
+                <span>Delete Folder</span> 
+              </div>
+              <div id="foldermenu-rename" class="foldermenu-link rename-link">
+                <img src="/images/rename.png" height="15" width="15">
+                <span>Rename Folder</span>
+              </div>
+             </div>
+
+
+             <!-- FILE MENU -->
+             <div id="filemenu">
+               <div id="filemenu-download" class="filemenu-link">
+                 <img src="/images/down-arrow.png" height="15" width="15">
+                 <span>Download File</span>
+               </div>
+               <div id="filemenu-delete" class="filemenu-link">
+                <img src="/images/delete.png" height="15" width="15">
+                <span>Delete File</span>
+              </div>
+              <div id="filemenu-newfolder" class="filemenu-link newfolder-link">
+                <img src="/images/add.png" height="15" width="15">
+                <span>New Folder</span>
+              </div>
+              <div id="filemenu-rename" class="filemenu-link rename-link">
+                <img src="/images/rename.png" height="15" width="15">
+                <span>Rename File</span>
+              </div>
+             </div>
+
+
+             <!-- MKDIR DIALOG -->
+             <div id="newfolder">
+               <div id="newfolder-titlebar" class="newfolder-child">
+                 <span id="newfolder-titletext">New Folder</span>
+                 <img id="newfolder-close" src="/images/close.png" height="15" width="15">
+               </div>
+               <div id="newfolder-textbox" class="newfolder-child">
+                 <input type="text" id="newfolder-input" autocomplete="off">
+               </div>
+               <div id="newfolder-buttons" class="newfolder-child-buttons">
+                 <div id="newfolder-create"><span class="newfolder-button">Create</span></div>
+                 <div id="newfolder-cancel"><span class="newfolder-button">Cancel</span></div>
+               </div>
+             </div>
+
+             <div id="dim"></div>
+
+
+             <!-- RENAME DIALOG -->
+             <div id="rename">
+               <div id="titlebar" class="rename-folder">
+                 <span id="rename-titletext">Rename</span>
+                 <img id="close" src="/images/close.png" height="15" width="15">
+               </div>
+               <div id="textbox" class="rename-textdiv">
+                 <input type="text" id="rename-input" autocomplete="off">
+               </div>
+               <div id="buttons" class="rename-buttons-div">
+                 <div id="rename-confirm-button"><span class="rename-button">Rename</span></div>
+                 <div id="rename-cancel-button"><span class="rename-cancel-button-span">Cancel</span></div>
+               </div>
+             </div>
+
+
+
+             <!-- FILE VIEWER / PREVIEW / MAIN CONTAINER -->
+             <div id="container" class="fileview">
+
+
+              <!-- header for all file views -->
+               <div id="header" class="fileview--header_wrapper">
+                 <div id="title" class="fileview">
+                   <img class="fileview" id="filetype" height="20" width="20">
+                   <span id="title-text" class="fileview"></span>
+                 </div>
+                 <a href="#" id="close-fileviewer" class="fileview"></a>
+               </div>
+
+
+
+               <!-- DOWNLOAD -->
+               <div id="main" class="download">
+                 <div id="main-title" class="download">Preview Not Available</div>
+                 <div id="main-buttons" class="download">
+                   <div id="buttons-download" class="download"><img src="/images/download.png" width="15" height="15">Download</div>
+                   <div id="buttons-cancel" class="download">Cancel</div>
+                 </div>
+               </div>
+
+
+
+               <!-- PDF PREVIEW / CANVAS -->
+              <div id="viewport" role="main" class="preview preview--viewport">
+                <div id="thumbnails" class="preview"></div>
+                <div id="fullsize" class="preview"></div>
+              </div>
+
+             <!-- EXTERNAL VIEWER / DOCX / ETC / IFRAME -->
+
+               <div id="iframe-wrapper" class="iframe-viewer"></div>
+             
+
+               </div>
+               <!-- END FILE VIEWER-->
+
+               <!-- PDF container -->
+               <div class="pdf-viewer--container">
+                 <!--toolbar-->
+                 <div class="pdf-viewer--toolbar">
+                   <div class="toolbar-container1">
+                     <button class="thumbnails-toggle">
+                       <img src="/images/pdf-sidebar.png">
+                     </button>
+                     <div class="printer">
+                      <img src="/images/printing.png">
+                    </div>
+                   </div>
+                   <div class="page-controls_container">
+                     <div class="pager"></div>
+                     <div class="zoomer">
+                       <select>
+                         <option value="pagefit">Page Fit</option>
+                         <option value="actualsize">Actual Size</option>
+                         <option value="fullwidth">Full Width</option>
+                       </select>
+                     </div>
+                   </div>
+                   <div class="pdf-viewer--toolbar_close"></div>
+                 </div>
+                 <!--body-->
+                 <div class="pdf-viewer--body">
+                   <div class="thumbnail-sidebar"></div>
+                   <div class="canvas-container"></div>
+                 </div>
+               </div>
+
+
+             <!-- INFO BOX -->
+             <div id="infobox">
+               <div id="ib-header">
+                 <span id="ib-title"></span>
+               </div>
+               <div id="ib-container">
+               <img id="ib-img" src="/images/folder.png">
+               <div id="progress">
+                 <div id="progress-fill">
+                   <span id="progress-percent"></span>
+                 </div>
+               </div>
+               </div>
+             </div>
+
+             <!-- SYNC COMPONENT -->
+             <div class="sync--wrapper">
+               <div class="sync--header">
+                 <div class="sync--header_title">Sync Files</div>
+                 <div class="sync--header_close" tabindex="0"></div>
+               </div>
+               
+                 <table class="synclist">
+                   <thead>
+                     <tr class="synclist--header_row">
+                       <td>
+                         <input type="checkbox" class="top-checkbox">
+                       </td>
+                       <td>
+                         <div></div>
+                       </td>
+                       <td>
+                         <div></div>
+                       </td>
+                       <td>
+                         <div></div>
+                       </td>
+                       <td>
+                         <div></div>
+                       </td>
+                     </tr>
+                   </thead>
+                   <tbody class="sync--synclist_body"></tbody>
+                 </table>
+               
+              <div class="sync--buttons">
+                <button type="button" class="sync--sync_files">Sync Files</button>
+              </div>
+             </div>
+
+             <!-- NEWSYNC COMPONENT -->
+             <div class="main-container">
+              <header>
+                <div class="filters">
+                  <button class="all filter">all</button>
+                  <button class="del filter">delete</button>
+                  <button class="ow filter">overwrite</button>
+                  <button class="add filter">add</button>
+                </div>
+                <div class="newsync_close"></div>
+              </header>
+              <div class="list-container"></div>
+              <button class="newsync_start">Sync</button>
+            </div>
+
+             <!-- LOADER ANIMATION PAGE -->
+             <div class="loader-container">
+               <img class="loading-logo" src="/images/asBigTransparent.png">
+               <div class="loader-circle"></div>
+             </div>
+
+
+    </body>
+    <script type="text/javascript" charset="utf-8" src="/js/bundle.js"></script>
+</html>

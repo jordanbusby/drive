@@ -1,0 +1,121 @@
+.my_account--wrapper {
+    display: none;
+    width: 60%;
+    min-width: 350px;
+    padding: 0 0 0 0;
+    height: 90vh;
+    margin: 10px auto;
+    border-radius: 5px;
+    
+    &.active {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+    }
+    
+    
+}
+
+.my_account--header {
+    width: 100%;
+    height: 55px;
+    margin: 0 0 0 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    border-radius: 5px;
+    font-size: 16px;
+    border-bottom: 1px solid lightgray;
+
+    p {
+        margin: 0 0 0 5vw;
+    }
+}
+
+.my_account--body {
+    padding: 12px;
+    margin: 0 auto;
+
+
+}
+
+.account_section {
+    p {
+        font-size: 1.3em;
+
+    }
+
+    input {
+        width: 30vw;
+        min-width: 310px;
+        height: 25px;
+        padding: 10px 10px 10px 10px;
+        font-size: 1.7em;
+        background-color: whitesmoke;
+        outline: none;
+        border: none;
+        border-radius: 4px;
+
+        &:focus {
+            border: 2px solid rgba(201, 227, 252, 0.548);
+        }
+
+    }
+
+    p.popup {
+        opacity: 0;
+        background: rgba(238, 182, 182, 0.582);
+        font-size: 0.9em;
+        border-radius: 3px;
+        padding: 5px;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+        &.active {
+            opacity: 1;
+            
+        }
+    }
+}
+
+.my_account_body--submit {
+    margin: 20px auto;
+    height: 40px;
+    width: 20vw;
+    min-width: 200px;
+    background-color: rgb(78, 133, 78);
+    color: white;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    
+    &:hover {
+        color: black;
+    }
+}
+
+.my_account_body--result {
+    opacity: 0;
+    padding: 5px;
+    height: 35px;
+    width: 200px;
+    border-radius: 5px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    
+    &.error {
+        background: rgb(238, 162, 162);
+        opacity: 1;
+    }
+    
+    &.success {
+        background: rgb(175, 238, 162);
+        opacity: 1;
+    }
+}

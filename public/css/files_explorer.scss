@@ -1,0 +1,89 @@
+#files-container {
+
+    display: none;
+
+    &.active {
+
+    background-color: white;
+    display: flex;
+    margin: auto;
+    flex-flow: column nowrap;
+    width: 95%;
+    box-shadow: $menu-shadow;
+
+    }
+
+    .files-list-header {
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 14px;
+    padding: 3px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(149, 167, 228);
+    color: white;
+    border-radius: 2px;
+    box-shadow: $menu-shadow;
+
+        > #name {
+        width: 60%;
+        padding-left: 25px;
+        text-overflow: ellipsis;
+        }
+
+        > #date {
+           width: 30%;
+        }
+
+        > #size {
+            width: 10%;
+        }
+    }
+}
+
+.folder-div, .file-div {
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 12px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e0e0;
+    user-select: none;
+    letter-spacing: 0.01em;
+}
+
+.filename-div, .foldername-div {
+    width: 60%;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    margin-left: 5px;
+}
+
+.file-link {
+    text-decoration: none;
+    color: black;
+}
+
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+.filename-div, .foldername-div {
+    img  {
+        margin: 6px 6px 6px 3px;
+        height: 20px;
+        width: 20px;
+    }
+}
+
+.filedate-div, .folderdate-div {
+    width: 30%;
+}
+
+.filesize-div, .foldersize-div {
+    width: 10%;
+}

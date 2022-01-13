@@ -1,0 +1,213 @@
+.main-container {
+
+    display: none;
+    height: min(600px, 90vh);
+    width: min(90vw, 1000px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 2px 2px 5px 3px #e6eefa;
+    grid-template-rows: 2.3em 1fr;
+    font: clamp(0.7em, 0.7vw, 2em) Arial, Verdana, sans-serif;
+    background-color: white;
+    &.active { display: grid; }
+  }
+  
+  header {
+    display: flex;
+    background: #afb1c4;
+    position: relative;
+    align-items: center;
+  }
+
+  .newsync_start {
+    /* reset */
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid rgb(42, 35, 80);
+    background-color: rgb(42, 35, 80);
+    color: white;
+    position: absolute;
+    bottom: 3%;
+    right: 3%;
+    block-size: 2em;
+    &:hover { 
+      background-color: white;
+      color: rgb(42, 35, 80);
+    }
+    &:active { transform: translateY(1px); }
+
+  }
+  
+  .newsync_close {
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    right: 3%;
+    position: absolute;
+  }
+  
+  .newsync_close::after, .newsync_close::before {
+    content: '';
+    height: 20px;
+    width: 2px;
+    background: white;
+    position: absolute;
+    right: 50%;
+  }
+
+  .newsync_close:hover::after, .newsync_close:hover::before {
+    background: red;
+  }
+  
+  .newsync_close::after {
+    transform: rotate(45deg);
+  }
+  
+  .newsync_close::before {
+    transform: rotate(-45deg);
+  }
+  
+  .filters {
+    display: flex;
+    align-self: stretch;
+    width: min(350px, 40%);
+  }
+  
+  //filter buttons
+  .filter {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    flex: 1 1 0;
+    &:active { transform: translateY(1px); }
+    &.all {
+      border-bottom: 4px solid #8596f2;
+      &:hover, &.on { background: #8596f2; }
+    }
+    
+    &.del {
+      border-bottom: 4px solid #d45b63;
+      &:hover, &.on { background: #d45b63; }
+    }
+  
+    &.ow {
+      border-bottom: 4px solid #f7c95c;
+      &:hover, &.on { background: #f7c95c; }
+    }
+    
+    &.add {
+      border-bottom: 4px solid #7fd479;
+      &:hover, &.on { background: #7fd479; }
+    }
+  }
+  
+  .list-container {
+    overflow: auto;
+    max-height: 100%;
+  }
+
+  /* top level files */
+  .list-container > .file {
+    display: flex;
+    flex-flow: row nowrap;
+    margin: 0.3em 0;
+    padding: 0.1em 0 0.1em 1em;
+  }
+  
+  /* top level folders */
+  .list-container > .folder {
+    margin: 0.3em 0;
+    padding: 1px 1px 1px 0.5em;
+  }
+  
+  /* cumulative margin/paddings for sublevels */
+  .folder > .folder, .file {
+    margin: 0.3em 0 0.3em 0;
+    padding-left: 1em;
+  }
+  
+  /* hide/show rules */
+  .folder > .folder, .file { display: none; }
+  .folder.selected > .folder { display: block; }
+  .folder.selected > .file.viewing { display: flex; }
+
+  /* file styles */
+  .file {
+    padding: 0.2em 0 0.2em 1em;
+
+    /*'inline-padding'*/
+    justify-content: space-between;
+
+    /*'block-margin'*/
+    align-items: center;
+
+    //action colors
+    &.action--add > .action { color: green; }
+    &.action--delete > .action { color: red; }
+    &.action--overwrite > .action { color: orange; }
+
+    & img {
+      margin: 0 0.4em;
+      height: 15px;
+      width: 15px;
+      flex: 0 0 15px;
+    }
+    
+    & .filename {
+      flex: 0 0 60%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    & .action {
+      margin-right: auto;
+      margin-left: 5%;
+      flex: 0 0 content;
+      text-align: center;
+      font-weight: bold;
+      > img {
+        vertical-align: text-top;
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    &:hover { 
+      background-color: rgb(221, 221, 255);
+    }
+    &.selected {
+      background-color:rgb(221, 221, 255);
+    }
+  }
+
+  .item.folder::before {
+    display: inline-block;
+    content: "";
+    border: none;
+    height: 0;
+    width: 0;
+    border-right: 7px solid black;
+    border-left: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    transform: rotate(41deg);
+    transition: transform 100ms;
+    margin-right: 0.2em;
+  }
+
+  .item.folder.selected::before {
+    transform: rotate(133deg);
+    transition: transform 100ms;
+  }
+  
+  .item.folder > img {
+    height: 1.1em;
+    margin-right: 0.4em;
+    vertical-align: middle;
+  }

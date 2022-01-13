@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "listEmittedFiles": true,
+        "listFiles": false,
+        "experimentalDecorators": true,
+        "strict": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "alwaysStrict": true,
+        "allowJs": false,
+        "esModuleInterop": false,
+        "module": "es6",
+        "target": "ES2017",
+        "outDir": "./bin/front",
+        "moduleResolution": "node",
+        "typeRoots": ["node_modules/@types", "./src/front/@types"],
+        "rootDir": "./src/front"
+    },
+    "include": [ "./src/front/**/*.ts" ],
+    "exclude": ["./src/server/**/*"]
+}

@@ -1,0 +1,40 @@
+.loader-container {
+    display: none;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    top: 0;
+    left: 0;
+    &.active {
+        display: block;
+    }
+}
+
+.loading-logo {
+    /* img dimensions: 279 x 142 */
+    margin: auto;
+    position: absolute;
+    top: calc(50% - 71px);
+    left: calc(50% - 140px);
+}
+
+.loader-circle {
+    top: calc(50% - 150px);
+    left: calc(50% - 155px);
+    position: absolute;
+    height: 320px;
+    width: 320px;
+    background: linear-gradient(to right, white 0% 70%, rgb(115, 183, 250));
+    border-radius: 50%;
+    -webkit-mask: radial-gradient(farthest-side at center, transparent calc(100% - 8px), #fff 0);
+            mask: radial-gradient(farthest-side at center, transparent calc(100% - 8px), #fff 0);
+    margin: auto;
+    animation: rot 3s linear infinite;
+}
+
+@keyframes rot {
+    100% { 
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,13 @@
+body {
+    background: url("/images/sprayer-edit.jpg") no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+@media (max-width: 768px) {
+    body {
+        height: 100vh;
+    }
+}

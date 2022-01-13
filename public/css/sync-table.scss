@@ -1,0 +1,114 @@
+table.synclist {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    box-shadow: 1px 1px 10px 1px rgb(212, 212, 212);
+    margin: 15px;
+    font-size: 14px;
+
+    thead {
+        border-bottom: 1px solid lightgray;
+        color: gray;
+    }
+
+    tr.synclist--header_row {
+        border-top: 1px solid lightgray;
+        border-bottom: 1px solid lightgray;
+    }
+
+    td {
+        padding: 5px;
+        text-overflow: ellipsis;
+    }
+}
+
+tr.synclist--folder_row {
+    color: black;
+    height: 25px;
+
+    &:focus {
+        background-color: rgb(150, 235, 150);
+        &::after {
+            content: '';
+            height: 7px;
+            width: 7px;
+            border-top: 1px solid rgb(134, 134, 134);
+            border-right: 1px solid rgb(136, 136, 136);
+            transform: rotate(90deg);
+            margin: 0 0 0 6px;
+        }
+    }
+
+    td.folder_name {
+
+        div {
+
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            span.folder_name--currentdir {
+                color: rgb(177, 177, 177);
+                margin: 0 3px 0 0;
+            }
+            span.folder_name--numfiles {
+                margin: 0 0 0 5px;
+            }
+
+            img {
+                height: 15px;
+                width: 15px;
+                margin: auto 5px;
+            }
+        }
+
+        div::after {
+            content: '';
+            height: 7px;
+            width: 7px;
+            border-top: 1px solid rgb(134, 134, 134);
+            border-right: 1px solid rgb(136, 136, 136);
+            transform: rotate(45deg);
+            margin: 0 0 0 6px;
+        }
+
+
+
+    }
+}
+
+tr.synclist--file_row {
+
+    td {
+        padding: 0;
+    }
+
+    div {
+        max-height: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+
+    &.active {
+        div {
+            max-height: 50px;
+        }
+        td {
+            padding: 5px;
+        }
+    }
+
+    &.overwrite { background-color: rgb(253, 189, 189); }
+    &.add { background-color: rgb(211, 255, 211); }
+    &.ignore { background-color: rgb(255, 255, 195); }
+}
+
+.file--name_container {
+    font-size: 13px;
+    img {
+        height: 15px;
+        width: 15px;
+        margin: 0 4px 0 5px;
+    }
+}

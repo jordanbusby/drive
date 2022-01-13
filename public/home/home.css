@@ -1,0 +1,928 @@
+@import url("https://fonts.googleapis.com/css2?family=Stick&display=swap");
+body, html {
+  top: 0;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  background-color: white;
+  font-family: "Roboto";
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-stretch: expanded;
+  user-select: none;
+  box-sizing: border-box;
+  overflow-y: overlay;
+}
+body.inpreview, html.inpreview {
+  overflow: hidden;
+}
+
+.top#header {
+  height: 60px;
+  border-bottom: 1px solid #a7a2a2;
+  width: 100%;
+  background-color: whitesmoke;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.top #as-logo {
+  height: 33px;
+  width: 61px;
+  margin-left: 12px;
+}
+.top #account-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-end;
+  justify-content: center;
+  height: 40px;
+  width: 60px;
+  border-radius: 3px;
+  margin-right: 15px;
+  margin-bottom: 3px;
+  padding: 4px;
+}
+.top #account-container:hover {
+  background-color: #dbd6d6;
+  transition: background-color 250ms;
+}
+.top #account-settings-img {
+  height: 17px;
+  width: 17px;
+}
+.top #account-name {
+  background-color: white;
+  border-radius: 50px;
+  height: 35px;
+  width: 35px;
+  box-shadow: 1px 1px 5px 1px #eeeded;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid gray;
+}
+
+#controls {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control {
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  transition: background-color 250ms;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+#control-delete:hover {
+  background-color: #e2e1e1;
+}
+
+#control-add:hover {
+  background-color: #e2e1e1;
+}
+
+#control-info:hover {
+  background-color: #e2e1e1;
+}
+
+.file-nav#navigation-container {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: white;
+  width: 95%;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto;
+  margin-top: 10px;
+  top: 5px;
+  font-size: 14px;
+}
+
+/**
+*
+* PATH: The horizontally growing folder path above the files container.
+*
+**/
+.file-nav#path {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  height: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  user-select: none;
+}
+
+.path-dir {
+  margin: 3px;
+  padding: 5px;
+  border-radius: 3px;
+  align-items: center;
+  justify-content: space-between;
+  height: 75%;
+  width: max-content;
+  display: flex;
+  flex-flow: row nowrap;
+  user-select: none;
+  background-color: white;
+  transition: background-color 145ms;
+}
+
+.path-dir > #path_down_arrow {
+  padding-left: 5px;
+}
+
+.path-dir:hover {
+  background-color: #e4e4f3;
+}
+
+#path > .path-divide {
+  height: 10px;
+  width: 10px;
+}
+
+#path_down_arrow {
+  user-select: none;
+}
+
+#main {
+  display: flex;
+  margin-top: 3px !important;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  flex-flow: row nowrap;
+  margin: auto;
+  background-color: white;
+  border-top-left-radius: 15px;
+}
+
+#files-container {
+  background-color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 85%;
+  box-shadow: 0 8px 24px rgba(149, 157, 162, 0.2);
+}
+#files-container .files-list-header {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 14px;
+  padding: 3px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #95a7e4;
+  color: white;
+  border-radius: 2px;
+  box-shadow: 0 8px 24px rgba(149, 157, 162, 0.2);
+}
+#files-container .files-list-header #name {
+  width: 60%;
+  padding-left: 25px;
+  text-overflow: ellipsis;
+}
+#files-container .files-list-header #date {
+  width: 30%;
+}
+#files-container .files-list-header #size {
+  width: 10%;
+}
+
+.folder-div, .file-div {
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: clip;
+  font-size: 12px;
+  padding: 3px;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e2e0e0;
+  border-bottom: 1px solid #e2e0e0;
+  height: 26px;
+  user-select: none;
+}
+
+.filename-div, .foldername-div {
+  width: 60%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  margin-left: 5px;
+}
+
+.file-link {
+  text-decoration: none;
+  color: black;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}
+
+.filename-div > *, .foldername-div > * {
+  padding-right: 8px;
+  padding-left: 2px;
+}
+
+.filedate-div, .folderdate-div {
+  width: 30%;
+}
+
+.filesize-div, .foldersize-div {
+  width: 10%;
+}
+
+/**
+*
+* ACCOUNT MENU: The menu that appears when you click
+* your user bubble in the top header.
+*
+**/
+.account-menu#container {
+  right: 0;
+  top: 0;
+  border-radius: 4px;
+  background-color: white;
+  visibility: hidden;
+  position: absolute;
+  width: 170px;
+  height: 0px;
+  transition: all 0.1s;
+  box-shadow: 0 8px 24px rgba(149, 157, 162, 0.2);
+  border-radius: 4px;
+  border: silver;
+  display: flex;
+  flex-flow: row wrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.account-menu#container.active {
+  visibility: visible;
+  height: 110px;
+}
+.account-menu#link {
+  padding-bottom: 8px;
+  width: 100%;
+  padding-top: 8px;
+  padding-left: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+}
+.account-menu#link#link:not(.name):hover {
+  background-color: #d1d1d1;
+}
+.account-menu#link.name {
+  border-top: 1px solid silver;
+}
+
+/**
+*
+* PATH MENU: The menu that appears when you click the
+* last folder on the Path Div above the files container.
+*
+**/
+#pathmenu {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  transition: all 160ms;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 8px 24px rgba(149, 157, 162, 0.2);
+  display: flex;
+  flex-flow: column;
+  left: -1000px;
+  align-items: baseline;
+  justify-content: flex-start;
+  z-index: -1002;
+  overflow: hidden;
+  font-size: 14px;
+  padding-top: 15px;
+}
+#pathmenu.active {
+  opacity: 1;
+  height: 123px;
+  width: 200px;
+  z-index: 2000;
+}
+#pathmenu > .pathmenu-link {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 110%;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  user-select: none;
+}
+#pathmenu > .pathmenu-link:hover {
+  background-color: #d1d1d1;
+}
+#pathmenu > .pathmenu-link > img {
+  padding-right: 10px;
+}
+
+#path_down_arrow {
+  width: 10px;
+  height: 10px;
+}
+
+/**
+*
+* FOLDER MENU: Context menu that appears on right click on folder.
+*
+**/
+#foldermenu {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  transition-duration: 160ms;
+  transition-property: height width;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  display: none;
+  flex-flow: column;
+  align-items: baseline;
+  justify-content: flex-start;
+  z-index: -1000;
+  overflow: hidden;
+  font-size: 14px;
+  padding-top: 15px;
+}
+#foldermenu.active {
+  display: flex;
+  opacity: 1;
+  width: 200px;
+  height: 145px;
+  z-index: 2000;
+}
+#foldermenu > .foldermenu-link {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 110%;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  user-select: none;
+}
+#foldermenu > .foldermenu-link:hover {
+  background-color: #d1d1d1;
+}
+#foldermenu > .foldermenu-link > img {
+  padding-right: 10px;
+}
+
+/**
+*
+* FILE MENU: Context Menu that appears on a right click on a file.
+*
+**/
+#filemenu {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  transition-property: width height;
+  transition-duration: 160ms;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-flow: column;
+  left: -1000px;
+  align-items: baseline;
+  justify-content: flex-start;
+  z-index: -1000;
+  overflow-x: hidden;
+  font-size: 14px;
+  padding-top: 15px;
+  overflow: hidden;
+}
+#filemenu.active {
+  opacity: 1;
+  width: 200px;
+  height: 148px;
+  z-index: 2000;
+}
+#filemenu > .filemenu-link {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 110%;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  user-select: none;
+}
+#filemenu > .filemenu-link > img {
+  padding-right: 10px;
+}
+#filemenu > .filemenu-link:hover {
+  background-color: #d1d1d1;
+}
+
+/**
+*
+* NEW FOLDER DIALOG: For creating a new folder.
+*
+**/
+#newfolder {
+  display: none;
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  height: 125px;
+  width: 275px;
+  background-color: white;
+  border-radius: 5px;
+  position: absolute;
+}
+#newfolder.active {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 2300;
+  /* how to center a div in 2021 and beyond */
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#newfolder-titlebar {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+#newfolder-close {
+  background-color: white;
+  transition: background-color 500ms;
+  padding: 5px;
+  border-radius: 5px;
+}
+#newfolder-close:hover {
+  background-color: #e2e1e1;
+}
+
+#newfolder-textbox {
+  height: 20px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#newfolder-input {
+  font-size: 16px;
+  padding: 2px 8px 2px;
+  height: 25px;
+  margin: 2px;
+  border: 1px solid #d9d9d9;
+  border-top: 1px solid #f2f2f7;
+  width: 225px;
+}
+
+#newfolder-buttons {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  padding: 10px;
+}
+#newfolder-buttons > div {
+  user-select: none;
+  background-color: #8385f1;
+  color: white;
+  padding: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  transition: background-color 325ms;
+}
+#newfolder-buttons:hover {
+  background-color: #2a57ec;
+}
+
+/**
+*
+* RENAME DIALOG: Dialog for renaming files or folders.
+*
+**/
+#rename {
+  display: none;
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  height: 125px;
+  width: 275px;
+  background-color: white;
+  border-radius: 5px;
+  position: absolute;
+}
+#rename.active {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 2300;
+  /* how to center a div in 2021 and beyond */
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+#rename > #titlebar {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+#rename > #close {
+  background-color: white;
+  transition: background-color 500ms;
+  padding: 5px;
+  border-radius: 5px;
+}
+#rename > #close:hover {
+  background-color: #e2e1e1;
+}
+#rename > #textbox {
+  height: 20px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+#rename > #textbox > input {
+  font-size: 16px;
+  padding: 2px 8px 2px;
+  height: 25px;
+  margin: 2px;
+  border: 1px solid #d9d9d9;
+  border-top: 1px solid #f2f2f7;
+  width: 225px;
+}
+#rename > #buttons {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  padding: 10px;
+}
+#rename > #buttons > div {
+  user-select: none;
+  background-color: #8385f1;
+  color: white;
+  padding: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  transition: background-color 325ms;
+}
+#rename > #buttons > div:hover {
+  background-color: #2a57ec;
+}
+
+/**
+*
+* DIM WINDOW/DIV: Overlay over the page to effect a dim
+*
+**/
+#dim {
+  display: block;
+  position: absolute;
+  opacity: 0;
+  transition: all 300ms ease-in-out;
+  top: 0px;
+  left: 0px;
+  visibility: hidden;
+}
+#dim.active {
+  opacity: 0.6;
+  background-color: #000;
+  transition: opacity 300ms ease-in-out;
+  visibility: visible;
+}
+
+/**
+*
+* INFOBOX: FOR DISPLAYING UPLOAD INFORMATION
+*
+**/
+#infobox {
+  opacity: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  bottom: 15px;
+  right: 28px;
+  transition: opacity 200ms ease-in-out;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 180px;
+  width: 350px;
+  background-color: white;
+  position: absolute;
+  box-shadow: 0 8px 24px rgba(149, 157, 162, 0.2);
+}
+#infobox.active {
+  opacity: 1;
+  transition: opacity 200ms ease-in-out;
+}
+#infobox #ib-header {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  height: 65px;
+  background-color: #7c7c7c;
+  align-items: center;
+  justify-content: flex-start;
+  color: white;
+}
+#infobox #ib-title {
+  font-size: 14px;
+  margin-left: 17px;
+  text-overflow: ellipsis;
+}
+#infobox #ib-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 99%;
+  height: 70%;
+}
+#infobox #ib-img {
+  width: 35px;
+  height: 35px;
+}
+#infobox #progress {
+  border: 2px solid darkblue;
+  width: 75%;
+  height: 25px;
+}
+#infobox #progress-fill {
+  background-color: lightblue;
+  height: 100%;
+  justify-items: center;
+  vertical-align: middle;
+  align-items: center;
+}
+#infobox #progress-percent {
+  margin-left: 10px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: normal;
+  vertical-align: middle;
+}
+
+/**
+*
+*FILE VIEWER: DOWNLOAD OR PREVIEW, EDIT OR VIEW BASED ON PERMISSIONS.
+*
+**/
+.fileview#container {
+  background: rgba(0, 0, 0, 0);
+  color: #e4e4e4;
+  display: none;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 90%;
+  max-width: 90%;
+  height: 100%;
+  margin: auto;
+  position: fixed;
+  overflow: overlay;
+}
+.fileview#container.active {
+  display: flex;
+  z-index: 2302;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+.fileview #header {
+  height: 6%;
+  width: 90%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.fileview #header #close-fileviewer {
+  top: 0px;
+  right: 15px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  transition: all 0.5s;
+}
+.fileview #header #close-fileviewer:hover::after {
+  background-color: #e2a0a0;
+  transition: all 0.25s;
+}
+.fileview #header #close-fileviewer:hover::before {
+  background-color: #daa8a8;
+  transition: all 0.25s;
+}
+.fileview #header #close-fileviewer::after, .fileview #header #close-fileviewer::before {
+  position: absolute;
+  content: " ";
+  width: 2px;
+  height: 33px;
+  background-color: white;
+  color: white;
+  margin-left: 18px;
+  margin-top: 3px;
+}
+.fileview #header #close-fileviewer::after {
+  transform: rotate(45deg);
+  transition-property: all;
+  transition-duration: 0.3s;
+}
+.fileview #header #close-fileviewer::before {
+  transform: rotate(-45deg);
+  transition-property: all;
+  transition-duration: 0.3s;
+}
+.fileview#title {
+  display: flex;
+  flex-flow: row;
+  width: max-content;
+  height: max-content;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2303;
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 3px;
+}
+.fileview#title:hover {
+  background-color: #686868;
+  transition: background-color 300ms;
+}
+.fileview#title-text {
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-overflow: ellipsis;
+}
+.fileview#filetype {
+  padding-right: 7px;
+}
+
+/**
+*
+* DOWNLOAD: No preview available.
+*
+**/
+.download#main {
+  position: absolute;
+  width: 335px;
+  height: 150px;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: none;
+  border-radius: 5px;
+}
+.download#main.active {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+}
+.download #main-title {
+  width: 100%;
+  color: black;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.download#main-buttons {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 85%;
+}
+.download#main-buttons > div {
+  width: 40%;
+  height: 40px;
+  background-color: dodgerblue;
+  color: white;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.download#main-buttons > div:hover {
+  background-color: #2254f8;
+  transition: background-color 250ms;
+  user-select: none;
+}
+.download#main-buttons > div > img {
+  padding-right: 5px;
+}
+
+/**
+*
+* FILE PREVIEWER: Container, Toolbar, Viewport, Canvas, etc.
+*
+**/
+.preview#viewport {
+  width: 1000px;
+  max-width: 98%;
+  display: none;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  background: rgba(0, 0, 0, 0);
+  color: #e4e4e4;
+  border-radius: 4px;
+  height: 95%;
+  position: relative;
+  overflow: overlay;
+}
+.preview#viewport.active {
+  z-index: 5000;
+  display: flex;
+}
+.preview#thumbnails {
+  height: 90%;
+  max-width: 200px;
+  border-radius: 3px;
+  display: none;
+  flex-flow: column nowrap;
+  overflow-y: scroll;
+  padding: 10px;
+}
+.preview#thumbnails.active {
+  display: flex;
+}
+.preview#thumbnails > canvas {
+  padding: 4px;
+}
+.preview#thumbnails > canvas.selected {
+  border: 1px solid white;
+}
+.preview#fullsize {
+  height: 90%;
+  max-width: 70%;
+  overflow: overlay;
+}
+
+.google-viewer#iframe-wrapper {
+  height: 95%;
+  width: 95%;
+  display: none;
+}
+.google-viewer#iframe-wrapper.active {
+  display: flex;
+}
+.google-viewer#iframe-wrapper > iframe {
+  width: 100%;
+  top: 0;
+  display: none;
+  background-color: rgba(34, 84, 248, 0);
+}
+.google-viewer#iframe-wrapper > iframe.active {
+  display: block;
+}
+
+/*# sourceMappingURL=home.css.map */

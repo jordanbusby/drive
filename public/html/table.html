@@ -1,0 +1,13 @@
+<tr class="synclist--folder_row" data-folder="${key}" tabindex="0">
+    <td>
+      <div><input type="checkbox" class="synclist--folder_checkbox"></div>
+    </td>
+    <td class="folder_name" colspan="3">
+      <div>
+        <img src="/images/folder.png">
+        <span class="folder_name--currentdir">${drive.state.currentDir.split('/').pop()}</span>
+        <span class="folder_name--syncdir">${'/' + key} </span>
+        <span class="folder_name--numfiles"> - ${this.list[key].length} files</span>
+      </div>
+    </td>
+  </tr>

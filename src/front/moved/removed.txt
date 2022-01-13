@@ -1,0 +1,33 @@
+async function deleteSelected(event: MouseEvent): Promise<APIResponse> {
+
+    hideMenu(event, true);
+
+    if (state.selectedFiles.length === 0) {
+        return Promise.reject(state.selectedFiles.length);
+    }
+
+    const request = {
+        method: 'DELETE',
+        body: JSON.stringify(state),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    return fetch('/api/delete', request)
+        .then(response => {
+            if (!response.ok) {
+                alert(`Error: ${response.statusText}`);
+            } else {
+                return response.json();
+            }
+        })
+        .then(async (json: APIResponse) => {
+
+            state.response = json;
+            await state.update({ selectedFiles: [] });
+            state.syncPage();
+            return json;
+        });
+
+}

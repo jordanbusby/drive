@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "listEmittedFiles": true,
+        "listFiles": false,
+        "experimentalDecorators": true,
+        "strict": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "alwaysStrict": true,
+        "allowJs": true,
+        "outDir": "./bin/server",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "target": "ES6",
+        "typeRoots": ["node_modules/@types", "./src/server/server.types.d.ts"],
+        "rootDir": "./src/server"
+        },
+    "include": ["./src/server/**/*.ts"],
+    "exclude": ["./src/front/**/*"],
+    "compileOnSave": true
+}
