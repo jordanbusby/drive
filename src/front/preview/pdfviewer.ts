@@ -401,7 +401,6 @@ class PDFViewer2 {
       this.toggleSidebar()
     }
     const selectSizeFunction = () => {
-      console.log(this)
       this.selectSize()
     }
     const printFunction = () => {

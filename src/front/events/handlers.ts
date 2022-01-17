@@ -1,3 +1,6 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import drive from '../index'
 import {
   createFolder,
@@ -309,24 +312,27 @@ export function drop(this: HTMLDivElement, event: MouseEvent): void {
   this.style.border = '';
   const name = this.getAttribute('data-name');
 
-  fetch('/api/move', { method: 'POST', body: JSON.stringify({ state: info, to: name }), headers: { 'Content-Type': 'application/json' } })
+  fetch('/api/move', {
+    method: 'POST',
+    body: JSON.stringify({ state: info, to: name }),
+    headers: { 'Content-Type': 'application/json' }
+  })
     .then((response) => {
       if (!response.ok) {
-        // eslint-disable-next-line no-alert
-        alert(`Error moving files: ${response.statusText}`);
+      // eslint-disable-next-line no-alert
+        alert(`Error moving files: ${response.statusText}`)
       }
-      return response.json();
+      return response.json()
     })
     .then(async (json: APIResponse) => {
-      drive.state.response = json;
+      drive.state.response = json
       await drive.state.update({ selectedFiles: [] })
-      drive.filesExplorer.getFiles();
-    });
+      drive.filesExplorer.getFiles()
+    })
 
-  drive.state.drag = false;
+  drive.state.drag = false
 }
 
-/* eslint-disable */
 async function dropFileHandler(evt: DragEvent) {
   if (!evt.dataTransfer || !evt.dataTransfer.items) {
     return
@@ -343,7 +349,6 @@ async function dropFileHandler(evt: DragEvent) {
 
   // loop through array, flatten all the files into an array,
   // and add the full path to the file objects as webkitRelativePath
-  
   for (const item of itemArray) {
     if (item.isFile) {
       const file = await addFile(item)
@@ -355,49 +360,67 @@ async function dropFileHandler(evt: DragEvent) {
     }
   }
 
+  // begin the sync process with the traversed dropped files
   const sync = new Newsync(flatFiles, drive.state.currentDir)
 
   function addFile(entry: any): Promise<WebKitFile> {
     return new Promise((resolve, reject) => {
       entry.file((file: File) => {
-        Object.defineProperty(file, 'webkitRelativePath', { value: entry.fullPath, configurable: true, enumerable: true });
-        resolve(file);
+        Object.defineProperty(file, 'webkitRelativePath',
+          {
+            value: entry.fullPath,
+            configurable: true,
+            enumerable: true
+          })
+        resolve(file)
       }, (err: Error) => {
-        reject(err);
-      });
-    });
+        reject(err)
+      })
+    })
   }
 
   async function getEntries(reader: any) {
-    const completeEntries: any[] = [];
+    const completeEntries: any[] = []
     let receivedEntries: any[] = await iterateEntries()
 
     while (receivedEntries.length) {
-      receivedEntries.forEach((entry: any) => completeEntries.push(entry));
+      receivedEntries.forEach((entry: any) => completeEntries.push(entry))
       receivedEntries = await iterateEntries()
     }
 
     return completeEntries
 
-
     function iterateEntries(): Promise<any[]> {
       return new Promise((resolve) => {
         reader.readEntries((entries: any) => {
-          resolve(entries);
-        });
-      });
+          resolve(entries)
+        })
+      })
     }
   }
 
+  /**
+   * @param entry FileSystemEntry directory object received from dropped files
+   * @returns WebKitFile[]
+   *
+   * This function is not recursive, but has recursive behavior.
+   * It loops over returnedEntries until it is empty.
+   * If an entry in returnedEntries is a directory,
+   * it reads the entries in that directory and adds those results
+   * to returnedEntries. Thus, all directories are traveled.
+   */
+
   async function crawl(entry: any): Promise<WebKitFile[]> {
-    const files: WebKitFile[] = [];
-    let returnedEntries: any = await getEntries(entry.createReader());
+    const files: WebKitFile[] = []
+
+    // list for files/folders read from getEntries
+    let returnedEntries: any = await getEntries(entry.createReader())
 
     while (returnedEntries.length) {
-      const currentEntry = returnedEntries.shift();
+      const currentEntry = returnedEntries.shift()
       if (currentEntry.isFile) {
-        const currentFile: any = await addFile(currentEntry);
-        files.push(currentFile);
+        const currentFile: any = await addFile(currentEntry)
+        files.push(currentFile)
       }
 
       if (currentEntry.isDirectory) {
@@ -408,10 +431,10 @@ async function dropFileHandler(evt: DragEvent) {
           // eslint-disable-next-line no-console
           console.log(e)
         }
-        returnedEntries = returnedEntries.concat(returnedCurrentEntry);
+        returnedEntries = returnedEntries.concat(returnedCurrentEntry)
       }
     }
-    return files;
+    return files
   }
 }
 /* eslint-enable */

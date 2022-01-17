@@ -64,32 +64,46 @@ export async function compare(
 
   // loop through every dropped file
   for (const file of droppedFiles) {
-    const folderPath = file.webkitRelativePath.slice(0, -file.name.length)
+    const folderPath = `${path.dirname(file.webkitRelativePath)}/`
 
-    // if the existing-files map object doesn't have an entry for this file location
+    // if the existing-files map doesn't have an entry for this file location
     if (!existingFilesMap.has(folderPath)) {
       const absolutePath = path.join(DRIVE_PATH, dir, folderPath)
+      // get all entries in folder that current file is in
       const existingFiles = await fs.readdir(absolutePath, { withFileTypes: true })
+
+        // only want the files
         .then((entryArray) => entryArray.filter((entry) => entry.isFile()).map((f) => f.name))
+
+        // if error, return blank array
         .catch(() => [])
 
+      // set the files under the foldername in the map
       existingFilesMap.set(folderPath, existingFiles)
     }
 
+    // if the existing files map already has this current folder set, and there are files in it
     if (existingFilesMap.get(folderPath)?.length) {
+      // get an array of the current file's folder's files, with the current file removed
       const existingFilesArray = existingFilesMap.get(folderPath)?.filter(
         (name) => name !== file.name
       )
+
+      // update the existing files map without the current file
       existingFilesMap.set(folderPath, existingFilesArray as Array<string>)
     }
 
+    // get an array of the folders of the webkitRelativePath
     const folders = file.webkitRelativePath.slice(1).split('/')
 
     // top level file (dragged file)
     if (folders.length === 1) {
       const absolutePath = path.resolve(DRIVE_PATH, dir.slice(1), folders[0])
-      console.log(absolutePath)
+
+      // set the filename as a property on top level of folderMap of the file, action, and stats
       folderMap[file.name] = await fs.stat(absolutePath)
+
+        // file exists, if we have older version, action = 'overwrite'. else 'ignore'
         .then((stats) => {
           const propertyMap: PropertyDescriptorMap = {
             stats: {
@@ -100,11 +114,11 @@ export async function compare(
             }
           }
           Object.defineProperties(file, propertyMap)
-          console.log(file)
           return file as ComparedFile
         })
+
+        // dropped file doesn't exist on the drive, so action = 'add'
         .catch(() => {
-          console.log(1)
           Object.defineProperty(file, 'action', {
             writable: true, enumerable: true, configurable: true, value: 'add'
           })
@@ -114,7 +128,7 @@ export async function compare(
       continue
     }
 
-    // start at the top for each file
+    // it's a folder, so lets start at the top of our folder map
     let currentPath = folderMap
 
     for (const folder of folders) {
@@ -122,6 +136,8 @@ export async function compare(
       // e.g.: /EG95/Notes/test1.pdf, [ 'EG95', 'Notes', 'test1.pdf' ]
       const isFile = folder === folders.slice(-1)[0]
 
+      // if we don't already have a property for this folder/file
+      // in the folder map, set it to an object
       if (!has.call(currentPath, folder) && !isFile) {
         currentPath[folder] = {}
       }
@@ -164,8 +180,8 @@ export async function compare(
           })
 
         // if there isnt any dropped files (!some)
-        //   1: with the current file's path && (dfile.path === file.path)
-        //   2: that has not been iterated yet (!has.call(currentPath, dfile.name))
+        // with the current file's path (dfile.path === file.path)
+        // && that has not been iterated yet (!has.call(currentPath, dfile.name))
 
         // aka, if this is the last file out of the ones in the dropped folder
 
@@ -195,16 +211,28 @@ export async function compare(
          * for notes on the !droppedFiles.some() predicate function.
          */
 
-        if (!droppedFiles.some(
-          // eslint-disable-next-line no-loop-func
-          (dfile) => dfile.webkitRelativePath.slice(0, -dfile.name.length) === folderPath
-          && !has.call(currentPath, dfile.name)
-        )) {
+        const currentFolderFiles = droppedFiles.filter(
+          (f) => `${path.dirname(f.webkitRelativePath)}/` === folderPath
+        )
+
+        // a better way of what I was trying to say with !some(file => !has.call(...))
+        // !files.some(f => !f...) is the same as files.every(f => f...)
+        // just easier to understand
+
+        // "if every dropped file in the current folder has a property on the currentPath object"
+        const checkedAllFilesInCurrentFolder = currentFolderFiles.every(
+          // eslint-disable-next-line no-shadow, no-loop-func
+          ({ name }) => has.call(currentPath, name)
+        )
+
+        if (checkedAllFilesInCurrentFolder) {
+          // existing files map now only contains files that were not dropped
           const existingFilesList = existingFilesMap.get(folderPath) || []
 
           for (const filename of existingFilesList) {
             const existingAbsolutePath = path.join(DRIVE_PATH, dir, folderPath)
             currentPath[filename] = await fs.stat(existingAbsolutePath)
+              // mark for deletion
               .then((stats) => {
                 const existingFile = {
                   name: filename, size: stats.size, lastModified: stats.mtimeMs, type: filename.split('.').pop(), webkitRelativePath: folderPath
@@ -222,7 +250,11 @@ export async function compare(
           }
         }
       }
-      // index into the next folder in the file structure, and update the current path
+
+      // Done with current folder or file.
+      // index into the next folde property in the
+      // file structure, and update the current path reference.
+      // note: this will be undefined if it was a file (because )
       currentPath = currentPath[folder] as FileStructure
     }
   }

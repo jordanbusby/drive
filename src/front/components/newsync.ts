@@ -122,7 +122,9 @@ class Newsync {
         const spanArr = document.querySelectorAll<HTMLSpanElement>('.action')
         spanArr.forEach((span) => span.closest('.file')?.setAttribute('data-action', span.childNodes[0].nodeValue as string))
       })
+
       setActionAttribute()
+
       const allFiles = document.querySelectorAll<HTMLElement>('.file')
       const uploadFileElements = Array.from(allFiles).filter((elt) => elt.dataset.action === 'add' || elt.dataset.action === 'overwrite')
       const deleteFileElements = Array.from(allFiles).filter((elt) => elt.dataset.action === 'delete')
@@ -158,8 +160,6 @@ class Newsync {
           }
           return response.json()
         })
-          .then(console.log)
-          .catch(console.log)
       }
 
       const filteredFiles = this.fileEntries.filter(
@@ -255,7 +255,7 @@ class Newsync {
     }
 
     async build(): Promise<void> {
-      function build(path: FileStructure, folder: HTMLElement = listContainer) {
+      function buildHTML(path: FileStructure, folder: HTMLElement = listContainer) {
         let markup = ''
         const files:string[] = []
         const folders:string[] = []
@@ -286,10 +286,9 @@ class Newsync {
 
         folder.insertAdjacentHTML('beforeend', markup)
 
-        folders.forEach((fol) => build(path[fol] as FileStructure, document.querySelector(`.item.folder[data-name="${fol}"][data-folderid="${randomID}"]`) as HTMLDivElement))
+        folders.forEach((fol) => buildHTML(path[fol] as FileStructure, document.querySelector(`.item.folder[data-name="${fol}"][data-folderid="${randomID}"]`) as HTMLDivElement))
       }
 
-      const has = Object.prototype.hasOwnProperty
       const fileListInfo = this.fileEntries.map((file) => ({
         size: file.size,
         lastModified: file.lastModified,
@@ -305,11 +304,11 @@ class Newsync {
       })
 
       const result: FileStructure = await compareRequest.json()
-      build(result)
+      buildHTML(result)
       this.addEventListeners()
 
       function isFile(o: FileStructure | ComparedFile):o is ComparedFile {
-        return has.call(o, 'action')
+        return Object.prototype.hasOwnProperty.call(o, 'action')
       }
     }
 

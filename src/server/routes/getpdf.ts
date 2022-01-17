@@ -25,9 +25,11 @@ router.post('/getpdf', async (req, res) => {
   res.setHeader('Cache-Control', 'No-store')
   const { absoluteFilePath } = req.body
   const drivePath = `${DRIVE_PATH}${absoluteFilePath}`
+  const extension = extname(absoluteFilePath).toLowerCase()
 
   // if its a pdf, send the file
-  if (extname(absoluteFilePath).toLowerCase() === 'pdf') {
+  if (extension === '.pdf') {
+    console.log('its a pdf, sending...')
     res.sendFile(drivePath, (err) => {
       if (err) {
         console.log(err)
