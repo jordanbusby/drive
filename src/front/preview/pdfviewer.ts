@@ -136,13 +136,7 @@ class PDFViewer2 {
     const response = await fetch('/getpdf', fetchOptions)
 
     if (!response.ok) {
-      alert(
-        `
-        Error retrieving file data. Please try again.
-        Error: ${response.statusText}
-
-        If error continue, please notify administrator.
-      `)
+      console.log(response.statusText)
       return
     }
 
