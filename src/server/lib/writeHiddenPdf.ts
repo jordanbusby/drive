@@ -11,7 +11,7 @@ async function writeHiddenPdf(docAbsolutePath: string): Promise<void> {
   const pdfArrayBuffer = await getConvertedPdf(docAbsolutePath) as ArrayBuffer
 
   // create a Buffer from the ArrayBuffer, and write it to the hidden pdf path
-  fs.writeFile(hiddenFilepath, Buffer.from(pdfArrayBuffer))
+  await fs.writeFile(hiddenFilepath, Buffer.from(pdfArrayBuffer))
 }
 
 export default writeHiddenPdf

@@ -9,3 +9,5 @@ export * as db from '../routes/db'
 export * as file from './fileapi'
 
 export * from './compare'
+
+export * from './deleteSync'

@@ -11,6 +11,29 @@ import {
 } from '../bindings/dom'
 import drive from '../index'
 
+/**
+ * A couple of important notes for this class.
+ *
+ * - The server-side is 'blind' in regards to how many files are going to be sent,
+ * and when the file is done. It only knows when a file is done from the
+ * information sent to initialize the upload, and comparing how many chunks it has
+ * received to how many it was told would be sent. Instead of, for example, this
+ * class sending a message saying that it's all done.
+ *
+ * - This upload class uses promises/promisejobs/microtasks to enqueue a function
+ * that starts sending a chunk to the server. It will enqueue this function up to
+ * the MAX_CONNECTIONS property.
+ *
+ * - All active connections for the current file must complete before it begins the
+ * next file. It's not smart enough to begin the next file if the last chunk of a file
+ * is in progress and the number of active connections is less than the MAX_CONNECTIONS.
+ *
+ * - Update 1/19/22 - Send file count, and files sent list to server on initialize
+ *  - This is so the server can monitor the upload progress and perform
+ *    some after-upload tasks such as creating the 'hidden pdf' files once
+ *    the upload is done.
+ */
+
 class Upload {
   public uploadDir: string
 
@@ -57,9 +80,7 @@ class Upload {
   constructor(fileList: WebKitFile[], uploadDir: string) {
     this.uploadDir = uploadDir
 
-    for (const file of fileList) {
-      this.files.push(file)
-    }
+    this.files = [...this.files, ...fileList]
 
     // filer out filtered names
     this.files = this.files.filter(
@@ -76,6 +97,8 @@ class Upload {
     for (const file of fileList) {
       this.totalSize += file.size
     }
+
+    this.totalSize = fileList.reduce((accum, { size }) => accum + size, 0)
   }
 
   init(file: WebKitFile): Promise<string> {
@@ -101,21 +124,23 @@ class Upload {
         name: file.name,
         numChunks: this.numChunks,
         currentDir: this.uploadDir,
-        dir
-      };
+        dir,
+        numFiles: this.numFiles,
+        filesSent: this.filesSent
+      }
 
       xhr.open('POST', '/api/initupload')
 
       xhr.setRequestHeader('Content-Type', 'application/json')
 
       xhr.send(JSON.stringify(initRequest))
-    });
+    })
   }
 
   uploadChunk(): Promise<UploadChunkResponseInterface> {
     return new Promise((resolve, reject) => {
       const file = this.files[this.currentFile]
-      const chunk = this.chunks.pop()!;
+      const chunk = this.chunks.pop()!
 
       const start = chunk * this.CHUNK_SIZE
       const end = start + this.CHUNK_SIZE
@@ -126,15 +151,11 @@ class Upload {
         this.fileBytesSent += this.progressCache[chunk]
         delete this.progressCache[chunk]
         resolve(JSON.parse(xhr.responseText))
-      });
-
-      xhr.addEventListener('abort', (event) => {
-        alert('abort')
-      });
+      })
 
       xhr.addEventListener('error', (event) => {
         console.log(event)
-      });
+      })
 
       xhr.addEventListener('timeout', (event) => {
         alert('timeout')
@@ -152,9 +173,9 @@ class Upload {
         const percent = Math.round((total / this.totalSize) * 100)
         infoBoxProgressFill.style.width = `${percent}%`
         infoBoxProgressPercent.innerHTML = `${percent}%`
-      });
+      })
 
-      xhr.open('POST', '/api/uploadchunk');
+      xhr.open('POST', '/api/uploadchunk')
 
       xhr.setRequestHeader('x-file-id', this.id)
       xhr.setRequestHeader('x-chunk', chunk.toString())
@@ -167,8 +188,10 @@ class Upload {
   uploadFile(): void {
     const activeConnections = Object.keys(this.activeConnections)
 
+    // if there are no more chunks to send for this file
     if (!this.chunks.length) {
-      if (!activeConnections.length) {
+      // and all of the connections are completed
+      if (activeConnections.length === 0) {
         this.complete()
         return
       }
@@ -182,10 +205,10 @@ class Upload {
     this.uploadChunk()
       .then((response) => {
         if (response.error) {
-          console.log(`deleting: ${response.chunk}`);
-          delete this.activeConnections[response.chunk];
-          this.chunks.push(response.chunk);
-          this.uploadFile();
+          console.log(`deleting: ${response.chunk}`)
+          delete this.activeConnections[response.chunk]
+          this.chunks.push(response.chunk)
+          this.uploadFile()
         }
 
         if (!response.error) {
@@ -194,10 +217,10 @@ class Upload {
         }
       })
       .catch((err) => {
-        console.log('uploadFile(): Error in catch block.');
-      });
+        console.log('uploadFile(): Error in catch block.')
+      })
 
-    this.uploadFile();
+    this.uploadFile()
   }
 
   async complete(): Promise<void> {

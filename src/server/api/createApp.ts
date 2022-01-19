@@ -12,7 +12,7 @@ import db from '../routes/db'
 export function createApp(store: session.Store): express.Application {
   const app = express()
   app.set('trust proxy', 1)
-  app.use(express.json({ limit: 200000 }), express.static('public', { lastModified: false }), morgan('dev'))
+  app.use(express.json({ limit: 200000 }), express.static('public', { lastModified: false }))
   app.use(session({
     ...SESSION_OPTIONS,
     store

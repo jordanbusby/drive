@@ -98,34 +98,11 @@ const storageSingle = multer.diskStorage({
 
 const uploadSingle = multer({ storage: storageSingle })
 
-const storageFolder = multer.diskStorage({
-
-  destination: (req, file, cb) => {
-    const { currentDir } = req.body
-
-    const mkdirPath = `${DRIVE_PATH + currentDir}/${req.body[file.originalname]}`
-
-    try {
-      fs.mkdirSync(mkdirPath, { recursive: true, mode: 0o770 });
-    } catch (e) {
-      console.log(e)
-    }
-
-    cb(null, mkdirPath)
-  },
-
-  filename: (req, file, cb) => {
-    cb(null, file.originalname)
-  }
-
-})
-
 router.post('/upload', uploadSingle.single('fileInput'), (req, res) => {
   res.status(200).json({ message: 'Upload received' })
 })
 
 router.get('/info/user', catchAsync(async (req: Request, res: Response) => {
-  // toJSON is called
   res.json(req.session.user)
 }))
 

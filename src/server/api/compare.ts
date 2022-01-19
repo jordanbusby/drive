@@ -1,7 +1,10 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-await-in-loop */
 import type { Stats } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
+// import { deleteHiddenFiles } from './hiddenTools'
 
 type DroppedFile = Pick<File, 'lastModified' | 'name' | 'size' | 'type'> & {
     webkitRelativePath: string
@@ -259,19 +262,4 @@ export async function compare(
     }
   }
   return folderMap
-}
-
-export async function deleteSync(
-  files: { [filename: string]: { path: string } },
-  directory: string
-): Promise<{ message: string, error: boolean }> {
-  return Promise.all(
-    Object.keys(files)
-      .map((filename) => {
-        const file = files[filename]
-        const absolutePath = path.resolve(DRIVE_PATH, directory.slice(1), file.path.slice(1))
-        return fs.rm(absolutePath)
-      })
-  )
-    .then(() => ({ message: 'deleted', error: false }), (error) => ({ message: 'error', error }))
 }

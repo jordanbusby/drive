@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-shadow */
@@ -7,6 +8,7 @@
 import fs from 'fs'
 import crypto from 'crypto'
 import { Request, Response } from 'express'
+import { extname } from 'path'
 import { performance } from 'perf_hooks'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
@@ -15,12 +17,17 @@ import writeHiddenPdf from '../lib/writeHiddenPdf'
 import {
   FileStorage, InitRequest, UploadHandlerInterface, InitResponse
 } from '../server.types'
+import { createHiddenFiles } from './hiddenTools'
 
 const fileStorage: FileStorage = {}
 const {
   DRIVE_PATH,
   PDF_PATH
 } = process.env
+
+let numFilesInUpload = 0
+let filesSent: string[] = []
+let docPaths: string[] = []
 
 class UploadHandler implements UploadHandlerInterface {
     public name: string
@@ -100,8 +107,13 @@ class UploadHandler implements UploadHandlerInterface {
 }
 
 export function uploadInit(request: Request, response: Response): boolean {
-  if (!request.body || !request.body.name || request.body.size === undefined
-    || request.body.numChunks === undefined || request.body.numChunks === null) {
+  if (
+    !request.body
+    || !request.body.name
+    || request.body.size === undefined
+    || request.body.numChunks === undefined
+    || request.body.numChunks === null
+  ) {
     response.status(200).json({
       error: true,
       id: '',
@@ -112,6 +124,8 @@ export function uploadInit(request: Request, response: Response): boolean {
 
   const id = crypto.randomBytes(64).toString('hex')
   const storage = fileStorage[id] = new UploadHandler(request.body)
+  numFilesInUpload = request.body.numFiles
+  filesSent = request.body.filesSent
 
   const initResp: InitResponse = { error: false, id, message: '' }
 
@@ -120,18 +134,12 @@ export function uploadInit(request: Request, response: Response): boolean {
 
     try {
       fs.mkdirSync(dir, { recursive: true })
+      response.json(initResp)
     } catch (e) {
-      response.status(200).json({
-        error: true,
-        id,
-        message: `mkdir error: ${e}`
-      })
+      console.error(e)
       return false
     }
   }
-
-  console.log(`receiving ${storage.name}: ${Math.round(((storage.size / 1024)))}KB`)
-  response.status(200).json(initResp)
   return true
 }
 
@@ -147,11 +155,10 @@ export function uploadHandler(request: Request, response: Response): void {
   })
 
   request.on('end', async () => {
-    console.log(1)
     const done = storage.pushChunk(chunk, parts, length)
 
     if (!done) {
-      response.status(200).json({
+      response.json({
         error: true,
         message: 'Invalid chunk length',
         chunk
@@ -159,7 +166,7 @@ export function uploadHandler(request: Request, response: Response): void {
       return
     }
 
-    response.status(200).json({
+    response.json({
       error: false,
       message: `Successfully received chunk ${chunk}`,
       chunk
@@ -171,14 +178,18 @@ export function uploadHandler(request: Request, response: Response): void {
       fs.writeFileSync(storage.absolutePath, storage.concat())
 
       // get the converted pdf from the convert service and write hidden pdf to disk
-      await writeHiddenPdf(storage.absolutePath)
+      if (extname(storage.absolutePath).includes('doc')) {
+        docPaths.push(storage.absolutePath)
+        console.log(docPaths)
+      }
 
-      // const stream = fs.createWriteStream(storage.absolutePath)
-      // stream.write(storage.concat())
-      // stream.end()
-
-      // log how long it took (can be removed in production)
-      console.log(`${storage.name} took ${Math.floor(performance.now() - storage.start)}ms`)
+      if (numFilesInUpload - 1 === filesSent.length) {
+        // all done with this upload
+        createHiddenFiles(docPaths.slice())
+        docPaths = []
+        numFilesInUpload = 0
+        filesSent = []
+      }
 
       // delete the chunks from the storage instance, freeing memory
       for (let i = 0; i < storage.chunks.length; i++) {

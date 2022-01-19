@@ -1,6 +1,12 @@
-import { Drive } from "./drive";
-import { statTimeParse } from '../api/misc'
+/* eslint-disable no-alert */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable class-methods-use-this */
 import * as Joi from 'joi'
+import { Drive } from './drive'
+import { statTimeParse } from '../api/misc'
 
 export interface UserDocumentJSON {
     createdAt: string
@@ -67,112 +73,122 @@ const domNewuserPasswordValid = document.querySelector('.poprow--password_result
 const domNewuserConfirmInput = document.querySelector('.poprow--confirm_input') as HTMLInputElement
 const domNewuserConfirmValid = document.querySelector('.poprow--confirm_result') as HTMLDivElement
 
-
-
-const name = Joi.string().min(3).max(128).trim().pattern(/^\w+\s\w+$/).rule({message: `'First Last' format required.`})
-const email = Joi.string().min(6).max(128).lowercase().trim().pattern(/^\w+@\w+[.]{1}\w+/).rule({ message: `'MyAddress@MyEmail.xyz' format required.`})
+const name = Joi.string().min(3).max(128).trim()
+  .pattern(/^\w+\s\w+$/)
+  .rule({ message: '\'First Last\' format required.' })
+const email = Joi.string().min(6).max(128).lowercase()
+  .trim()
+  .pattern(/^\w+@\w+[.]{1}\w+/)
+  .rule({ message: '\'MyAddress@MyEmail.xyz\' format required.' })
 const password = Joi.string().min(4).max(72).trim()
 
 export class Users {
     public Drive!: Drive
+
     public DOM: { wrapper: HTMLDivElement } = { wrapper: domUsersWrapper }
-    public data: UsersState = { change: true, read: Date.now(), userlist: [], companylist: [] }
+
+    public data: UsersState = {
+      change: true, read: Date.now(), userlist: [], companylist: []
+    }
 
     constructor(drive: Drive) {
-        this.Drive = drive
-        this.addEventListeners()
+      this.Drive = drive
+      this.addEventListeners()
     }
 
-    async show() {
-        this.DOM.wrapper.classList.add('active')
-        this.buildList()
+    async show(): Promise<void> {
+      this.DOM.wrapper.classList.add('active')
+      this.buildList()
     }
 
-    hide() {
-        this.DOM.wrapper.classList.remove('active')
+    hide(): void {
+      this.DOM.wrapper.classList.remove('active')
     }
 
-    addEventListeners() {
-        domNewuserSpan.addEventListener('click', this.displayNewuserRows)
-        this.nameInputListener()
-        this.emailInputListener()
-        this.passwordInputListener()
-        this.confirmInputListener()
-        domNewuserAdduser.addEventListener('click', () => this.addUser())//setting the 'onclick' property equal to an arrow function. That arrow function's [[ThisMode]] is 'lexical'. Thus, it's this value is defined by the surrounding scope, which is addEventListeners(), thus, this is the Users instance
-        domDeleteSelectedButton.addEventListener('click', this.deleteSelectedUsers)//setting the 'onclick' property equal to this.deleteSelectedUsers. So, HTMLButtonElement.onclick = deleteSelectedUsers, so HTMLButtonElement.onclick() --> 'this' is strict mode, undefined
+    addEventListeners(): void {
+      domNewuserSpan.addEventListener('click', this.displayNewuserRows)
+      this.nameInputListener()
+      this.emailInputListener()
+      this.passwordInputListener()
+      this.confirmInputListener()
+      domNewuserAdduser.addEventListener('click', () => this.addUser())// setting the 'onclick' property equal to an arrow function. That arrow function's [[ThisMode]] is 'lexical'. Thus, it's this value is defined by the surrounding scope, which is addEventListeners(), thus, this is the Users instance
+      domDeleteSelectedButton.addEventListener('click', this.deleteSelectedUsers)// setting the 'onclick' property equal to this.deleteSelectedUsers. So, HTMLButtonElement.onclick = deleteSelectedUsers, so HTMLButtonElement.onclick() --> 'this' is strict mode, undefined
     }
 
     async queryUserDB(query = {}): Promise<DBQueryAPIResponse<UserDocumentJSON>> {
-        const queryRequest = await fetch('/db/query/user', {
-            method: 'POST',
-            body: JSON.stringify(query),
-            headers: new Headers([['Content-Type', 'application/json']])
-        })
+      const queryRequest = await fetch('/db/query/user', {
+        method: 'POST',
+        body: JSON.stringify(query),
+        headers: new Headers([['Content-Type', 'application/json']])
+      })
 
-        if (!queryRequest.ok) {
-            console.log(queryRequest.statusText)
-        }
+      if (!queryRequest.ok) {
+        console.log(queryRequest.statusText)
+      }
 
-        return queryRequest.json()
+      return queryRequest.json()
     }
 
-    async queryOrganizationDB(query = {}): Promise<DBQueryAPIResponse<OrganizationDocumentJSON> | undefined> {
+    async queryOrganizationDB(query = {}):
+    Promise<DBQueryAPIResponse<OrganizationDocumentJSON> | undefined> {
+      const queryResult = await fetch('/db/query/org', {
+        method: 'POST',
+        body: JSON.stringify(query),
+        headers: new Headers([['Content-Type', 'application/json']])
+      })
 
-        const queryResult = await fetch('/db/query/org', {
-            method: 'POST',
-            body: JSON.stringify(query),
-            headers: new Headers([['Content-Type', 'application/json']])
-        })
-
-        return queryResult.json()
+      return queryResult.json()
     }
 
-    async refreshData() {
-        if (!this.data.change) {
-            return
-        }
-        const [userResponse, companyResponse] = await Promise.all([this.queryUserDB(), this.queryOrganizationDB()])
+    async refreshData(): Promise<void> {
+      if (!this.data.change) {
+        return
+      }
+      const [userResponse, companyResponse] = await Promise.all(
+        [this.queryUserDB(), this.queryOrganizationDB()]
+      )
 
-        if (userResponse.error) {
-            console.log(userResponse.message)
-            return
-        }
+      if (userResponse.error) {
+        console.log(userResponse.message)
+        return
+      }
 
-        if (companyResponse && companyResponse.error || !companyResponse) {
-            console.log(companyResponse?.message)
-            return
-        }
+      if (
+        companyResponse
+        && companyResponse.error
+        || !companyResponse
+      ) {
+        console.log(companyResponse?.message)
+        return
+      }
 
-        this.data.userlist = userResponse.queryResult!
-        this.data.companylist = companyResponse.queryResult!
-        this.data.change = false
-        this.data.read = Date.now()
+      this.data.userlist = userResponse.queryResult!
+      this.data.companylist = companyResponse.queryResult!
+      this.data.change = false
+      this.data.read = Date.now()
     }
 
-    async buildList() {
+    async buildList(): Promise<void> {
+      await this.refreshData()
+      const orgs = await this.queryOrganizationDB()
 
-        await this.refreshData()
-        const orgs = await this.queryOrganizationDB()
+      while (domNewuserCompanySelect.children.length) {
+        domNewuserCompanySelect.removeChild(domNewuserCompanySelect.children[0])
+      }
 
-        while (domNewuserCompanySelect.children.length) {
-            domNewuserCompanySelect.removeChild(domNewuserCompanySelect.children[0])
-        }
+      if (orgs && orgs.queryResult) {
+        orgs.queryResult.forEach((org) => domNewuserCompanySelect.insertAdjacentHTML('afterbegin',
+          `<option value="${org.companyName}">${org.companyName}</option>`))
+      }
 
-        if (orgs && orgs.queryResult) {
-            orgs.queryResult.forEach(org => domNewuserCompanySelect.insertAdjacentHTML('afterbegin', 
-            `<option value="${org.companyName}">${org.companyName}</option>`
-            ))
-        }
+      while (domTableBody.children.length > 6) {
+        domTableBody.removeChild(domTableBody.children[0])
+      }
 
-
-        while (domTableBody.children.length > 6) {
-            domTableBody.removeChild(domTableBody.children[0])
-        }
-
-        let html = ''
-        this.data.userlist.forEach(user => {
-            html += /*html*/
-            `
+      let html = ''
+      this.data.userlist.forEach((user) => {
+        html /* html */
+            += `
             <tr class="mainrow">
             <td class="row--checkbox_td"><input class="row--checkbox_input" type="checkbox"></td>
             <td class="row--name_td"><span class="row--name_span">${user.name} </span><span class="row--company_span">/ ${user.organization}</span></td>
@@ -181,237 +197,234 @@ export class Users {
             <td class="row--online_td"><span class="row--${user.loggedIn ? 'online' : 'offline'}_span"></span></td>
           </tr>
             `
-        })
+      })
 
-        domTableBody.insertAdjacentHTML('afterbegin', html)
+      domTableBody.insertAdjacentHTML('afterbegin', html)
     }
 
-    displayNewuserRows(event: Event) {
-        document.querySelectorAll('.addnew--poprow').forEach(row => row.classList.toggle('active'))
-        domNewuserInputs.forEach(input => input.value = '')
-        domNewuserValids.forEach(div => {
-            div.innerHTML = ''
-            div.classList.remove('error')
-        })
+    displayNewuserRows(event: Event): void {
+      document.querySelectorAll('.addnew--poprow').forEach((row) => row.classList.toggle('active'))
+      domNewuserInputs.forEach((input) => {
+        input.value = ''
+      })
+      domNewuserValids.forEach((div) => {
+        div.innerHTML = ''
+        div.classList.remove('error')
+      })
     }
 
-    nameInputListener() {
-        let timeoutID: any
+    nameInputListener(): void {
+      let timeoutID: any
 
-        const handler = (event:Event) => {
-            const input = event.currentTarget as HTMLInputElement
-            clearTimeout(timeoutID)
+      const handler = (event:Event) => {
+        const input = event.currentTarget as HTMLInputElement
+        clearTimeout(timeoutID)
 
-            timeoutID = setTimeout(() => {
-                if (!input.value) {
-                    domNewuserNameValid.classList.remove('error')
-                    domNewuserNameValid.innerHTML = ''
-                    return
-                }
+        timeoutID = setTimeout(() => {
+          if (!input.value) {
+            domNewuserNameValid.classList.remove('error')
+            domNewuserNameValid.innerHTML = ''
+            return
+          }
 
-                const result = name.validate(input.value)
+          const result = name.validate(input.value)
 
-                if (!result.error) {
-                    domNewuserNameValid.classList.remove('error')
-                    domNewuserNameValid.innerHTML = ''
-                } else {
-                    domNewuserNameValid.classList.add('error')
-                    domNewuserNameValid.innerHTML = result.error.message
-                }
-            }, 600)
-        }
-        domNewuserNameInput.addEventListener('input', handler)
+          if (!result.error) {
+            domNewuserNameValid.classList.remove('error')
+            domNewuserNameValid.innerHTML = ''
+          } else {
+            domNewuserNameValid.classList.add('error')
+            domNewuserNameValid.innerHTML = result.error.message
+          }
+        }, 600)
+      }
+      domNewuserNameInput.addEventListener('input', handler)
     }
 
-    emailInputListener() {
-        let timeoutID: any
+    emailInputListener(): void {
+      let timeoutID: any
 
-        const handler = (event:Event) => {
-            clearTimeout(timeoutID)
-            const input = event.currentTarget as HTMLInputElement
-            timeoutID = setTimeout(() => {
-                if (!input.value) {   
-                    domNewuserEmailValid.classList.remove('error')
-                    domNewuserEmailValid.innerHTML = ''
-                    return
-                }
-                const result = email.validate(input.value)
-                if (!result.error) {
-                    domNewuserEmailValid.classList.remove('error')
-                    domNewuserEmailValid.innerHTML = ''
-                } else {
-                    domNewuserEmailValid.classList.add('error')
-                    domNewuserEmailValid.innerHTML = result.error.message
-                }
-            }, 600)
-        }
-        domNewuserEmailInput.addEventListener('input', handler)
+      const handler = (event:Event) => {
+        clearTimeout(timeoutID)
+        const input = event.currentTarget as HTMLInputElement
+        timeoutID = setTimeout(() => {
+          if (!input.value) {
+            domNewuserEmailValid.classList.remove('error')
+            domNewuserEmailValid.innerHTML = ''
+            return
+          }
+          const result = email.validate(input.value)
+          if (!result.error) {
+            domNewuserEmailValid.classList.remove('error')
+            domNewuserEmailValid.innerHTML = ''
+          } else {
+            domNewuserEmailValid.classList.add('error')
+            domNewuserEmailValid.innerHTML = result.error.message
+          }
+        }, 600)
+      }
+      domNewuserEmailInput.addEventListener('input', handler)
     }
 
-    passwordInputListener() {
-        let timeoutID: any
+    passwordInputListener(): void {
+      let timeoutID: any
 
-        function showError(error: string) {
-            domNewuserPasswordValid.innerHTML = error
-            domNewuserPasswordValid.classList.add('error')
-        }
+      function showError(error: string) {
+        domNewuserPasswordValid.innerHTML = error
+        domNewuserPasswordValid.classList.add('error')
+      }
 
-        function hideError() {
-            domNewuserPasswordValid.innerHTML = ''
-            domNewuserPasswordValid.classList.remove('error')
-        }
+      function hideError() {
+        domNewuserPasswordValid.innerHTML = ''
+        domNewuserPasswordValid.classList.remove('error')
+      }
 
-        const showConfirmError = (error: string) => {
+      const showConfirmError = (error: string) => {
         domNewuserConfirmValid.innerHTML = error
         domNewuserConfirmValid.classList.add('error')
-        }
+      }
 
-        const hideConfirmError = () => {
+      const hideConfirmError = () => {
         domNewuserConfirmValid.classList.remove('error')
         domNewuserConfirmValid.innerHTML = ''
-        }
+      }
 
-        function handler(event: Event) {
-            clearTimeout(timeoutID)
-            const input: HTMLInputElement = event.currentTarget as HTMLInputElement
-            timeoutID = setTimeout(() => {
-                if (!input.value) {
-                    hideError()
-                    return
-                }
-
-                const result = password.validate(input.value)
-
-                if (result.error) {
-                    showError(result.error.message)
-                    return
-                }
-
-                hideError()
-
-                if (domNewuserConfirmInput.value && (domNewuserConfirmInput.value !== input.value)) {
-                    if (!domNewuserConfirmInput.classList.contains('error')) {
-                        showConfirmError('Passwords must match!')
-                    }
-                }
-                
-                if (input.value && !domNewuserConfirmInput.value) {
-                    showConfirmError('Passwords must match!')
-                }
-
-                if (domNewuserConfirmInput.value && domNewuserConfirmInput.value === input.value) {
-                    hideConfirmError()
-                    hideError()
-                }
-
-            }, 750)
-        }
-
-        domNewuserPasswordInput.addEventListener('input', handler)
-    }
-
-    confirmInputListener() {
-
-        const showError = (error: string) => {
-            domNewuserConfirmValid.innerHTML = error
-            domNewuserConfirmValid.classList.add('error')
-        }
-
-        const hideError = () => {
-            domNewuserConfirmValid.innerHTML = ''
-            domNewuserConfirmValid.classList.remove('error')
-        }
-
-        const hidePasswordError = () => {
-            domNewuserPasswordValid.classList.remove('error')
-            domNewuserPasswordValid.innerHTML = ''
-        }
-
-        const showPasswordError = (error: string) => {
-            domNewuserPasswordValid.innerHTML = error
-            domNewuserPasswordValid.classList.add('error')
-        }
-
-        let timeoutID: any
-
-        const handler = (event: Event) => {
-            const input: HTMLInputElement = event.currentTarget as HTMLInputElement
-
-            clearTimeout(timeoutID)
-            timeoutID = setTimeout(() => {
-                
-                if (!input.value) {
-                    hidePasswordError()
-                    hideError()
-                    return
-                }
-
-                if (domNewuserPasswordInput.value === '') {
-                    showPasswordError('You must enter a password first')
-                }
-
-                const result = password.validate(input.value)
-
-                if (result.error) {
-                    showError(result.error.message)
-                    return
-                }
-
-                if (input.value !== domNewuserPasswordInput.value) {
-                    showError('Passwords must match!')
-                    return
-                } 
-                
-                hideError()
-
-            }, 750)
-        }
-
-        domNewuserConfirmInput.addEventListener('input', handler)
-    }
-
-    async addUser() {
-        let error = false
-        document.querySelectorAll('.vresult').forEach( (div, ind) => {
-            if (div.classList.contains('error')) {
-                error = true
-                domNewuserInputs[ind].focus()
-                return
-            }
-
-        })
-        if (error) {
-            console.log(`error: ${error}`)
+      function handler(event: Event) {
+        clearTimeout(timeoutID)
+        const input: HTMLInputElement = event.currentTarget as HTMLInputElement
+        timeoutID = setTimeout(() => {
+          if (!input.value) {
+            hideError()
             return
+          }
+
+          const result = password.validate(input.value)
+
+          if (result.error) {
+            showError(result.error.message)
+            return
+          }
+
+          hideError()
+
+          if (domNewuserConfirmInput.value && (domNewuserConfirmInput.value !== input.value)) {
+            if (!domNewuserConfirmInput.classList.contains('error')) {
+              showConfirmError('Passwords must match!')
+            }
+          }
+
+          if (input.value && !domNewuserConfirmInput.value) {
+            showConfirmError('Passwords must match!')
+          }
+
+          if (domNewuserConfirmInput.value && domNewuserConfirmInput.value === input.value) {
+            hideConfirmError()
+            hideError()
+          }
+        }, 750)
+      }
+
+      domNewuserPasswordInput.addEventListener('input', handler)
+    }
+
+    confirmInputListener(): void {
+      const showError = (error: string) => {
+        domNewuserConfirmValid.innerHTML = error
+        domNewuserConfirmValid.classList.add('error')
+      }
+
+      const hideError = () => {
+        domNewuserConfirmValid.innerHTML = ''
+        domNewuserConfirmValid.classList.remove('error')
+      }
+
+      const hidePasswordError = () => {
+        domNewuserPasswordValid.classList.remove('error')
+        domNewuserPasswordValid.innerHTML = ''
+      }
+
+      const showPasswordError = (error: string) => {
+        domNewuserPasswordValid.innerHTML = error
+        domNewuserPasswordValid.classList.add('error')
+      }
+
+      let timeoutID: any
+
+      const handler = (event: Event) => {
+        const input: HTMLInputElement = event.currentTarget as HTMLInputElement
+
+        clearTimeout(timeoutID)
+        timeoutID = setTimeout(() => {
+          if (!input.value) {
+            hidePasswordError()
+            hideError()
+            return
+          }
+
+          if (domNewuserPasswordInput.value === '') {
+            showPasswordError('You must enter a password first')
+          }
+
+          const result = password.validate(input.value)
+
+          if (result.error) {
+            showError(result.error.message)
+            return
+          }
+
+          if (input.value !== domNewuserPasswordInput.value) {
+            showError('Passwords must match!')
+            return
+          }
+
+          hideError()
+        }, 750)
+      }
+
+      domNewuserConfirmInput.addEventListener('input', handler)
+    }
+
+    async addUser(): Promise<void> {
+      let error = false
+      document.querySelectorAll('.vresult').forEach((div, ind) => {
+        if (div.classList.contains('error')) {
+          error = true
+          domNewuserInputs[ind].focus()
         }
+      })
+      if (error) {
+        console.log(`error: ${error}`)
+        return
+      }
 
-        const organization = this.data.companylist.find(orgs => orgs.companyName === domNewuserCompanySelect.value) as OrganizationDocumentJSON
+      const organization = this.data.companylist.find(
+        (orgs) => orgs.companyName === domNewuserCompanySelect.value
+      ) as OrganizationDocumentJSON
 
-        const data = {
-            name: domNewuserNameInput.value,
-            email: domNewuserEmailInput.value,
-            password: domNewuserPasswordInput.value,
-            passwordConfirm: domNewuserConfirmInput.value,
-            level: domNewuserTypeSelect.value,
-            organization: organization.companyName,
-            root: '/' + organization.folderAbsolutePathArray.join('/')
-        }
+      const data = {
+        name: domNewuserNameInput.value,
+        email: domNewuserEmailInput.value,
+        password: domNewuserPasswordInput.value,
+        passwordConfirm: domNewuserConfirmInput.value,
+        level: domNewuserTypeSelect.value,
+        organization: organization.companyName,
+        root: `/${organization.folderAbsolutePathArray.join('/')}`
+      }
 
-        console.log(data.root)
+      console.log(data.root)
 
-        const request = await fetch('/register', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: new Headers([['Content-Type', 'application/json']])
-        })
+      const request = await fetch('/register', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers([['Content-Type', 'application/json']])
+      })
 
-        const result = await request.json()
+      const result = await request.json()
 
         document.querySelector('.users-result')!.innerHTML = result.message
-
     }
 
-    deleteSelectedUsers() {
-        alert('Not yet implemented')
+    deleteSelectedUsers(): void {
+      alert('Not yet implemented')
     }
 }

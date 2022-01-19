@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import drive from '../index'
@@ -126,42 +127,47 @@ class Newsync {
       setActionAttribute()
 
       const allFiles = document.querySelectorAll<HTMLElement>('.file')
+
+      // files that need to be uploaded (add, or overwrite)
       const uploadFileElements = Array.from(allFiles).filter((elt) => elt.dataset.action === 'add' || elt.dataset.action === 'overwrite')
+
+      // files that need to be deleted
       const deleteFileElements = Array.from(allFiles).filter((elt) => elt.dataset.action === 'delete')
-      const uploadFilesMap: { [index:string]: { [index:string]: string | undefined } } = {}
-      const deleteFilesMap: { [index:string]: { [index:string]: string | undefined } } = {}
+      const uploadFilesMap: Record<string, any> = {}
+      const deleteFilesMap: Record<string, any> = {}
 
-      // USE A Map INSTEAD OF AN Object for Dictionaries!!
-
-      uploadFileElements.forEach((elt) => {
-        uploadFilesMap[elt.dataset.name as string] = {
-          filename: elt.dataset.name,
-          action: elt.dataset.action,
-          path: elt.dataset.path,
+      // set a property on the upload files map for each file that needs to be uploaded
+      uploadFileElements.forEach(({ dataset: { name, action, path } }) => {
+        uploadFilesMap[name as string] = {
+          filename: name,
+          action,
+          path,
         }
       })
 
-      deleteFileElements.forEach((elt) => {
-        deleteFilesMap[elt.dataset.name as string] = {
-          filename: elt.dataset.name,
-          action: elt.dataset.action,
-          path: elt.dataset.path,
+      // set a property on the delete files map for each file that needs to be deleted
+      deleteFileElements.forEach(({ dataset: { name, action, path } }) => {
+        deleteFilesMap[name as string] = {
+          filename: name,
+          action,
+          path,
         }
       })
 
+      // if there are files to be deleted
       if (Object.keys(deleteFilesMap).length) {
-        fetch('/api/deletesync', {
+        const requestOptions = {
           method: 'POST',
           headers: new Headers([['Content-Type', 'application/json']]),
           body: JSON.stringify({ files: deleteFilesMap, directory: this.currentDir }),
-        }).then((response) => {
-          if (!response.ok) {
-            console.log(response.statusText)
-          }
-          return response.json()
-        })
+        }
+
+        // send delete files request
+        const deleteRequest = await fetch('/api/deleteSync', requestOptions)
+        const response = await deleteRequest.json()
       }
 
+      // get a list of all the files/blobs that need to be uploaded
       const filteredFiles = this.fileEntries.filter(
         (file) => Object.prototype.hasOwnProperty.call(uploadFilesMap, file.name)
       )
@@ -289,6 +295,8 @@ class Newsync {
         folders.forEach((fol) => buildHTML(path[fol] as FileStructure, document.querySelector(`.item.folder[data-name="${fol}"][data-folderid="${randomID}"]`) as HTMLDivElement))
       }
 
+      // just get the few properties that we need need
+      // for compare() on the server
       const fileListInfo = this.fileEntries.map((file) => ({
         size: file.size,
         lastModified: file.lastModified,
@@ -305,6 +313,14 @@ class Newsync {
 
       const result: FileStructure = await compareRequest.json()
       buildHTML(result)
+
+      // show all the files by default when sync window appears
+      document.querySelectorAll<HTMLDivElement>('.file')
+        .forEach((file) => file.classList.add('viewing'))
+
+      // the 'all' button should show selected by default
+      filterButtons.all.classList.add('on')
+
       this.addEventListeners()
 
       function isFile(o: FileStructure | ComparedFile):o is ComparedFile {
